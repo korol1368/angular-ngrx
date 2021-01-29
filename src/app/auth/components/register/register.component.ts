@@ -14,7 +14,7 @@ export class RegisterComponent implements OnInit {
   form!: FormGroup;
   isSubmitting$!: Observable<boolean>;
 
-  constructor(private fb: FormBuilder, private store: Store) {}
+  constructor(private fb: FormBuilder, private store: Store<{}>) {}
 
   ngOnInit(): void {
     this.initializeForm();
@@ -23,14 +23,13 @@ export class RegisterComponent implements OnInit {
 
   initializeValues(): void {
     this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
-    console.log (this.isSubmitting$);
   }
 
   initializeForm(): void {
     this.form = this.fb.group({
       username: ['', Validators.required],
-      email: ['', Validators.required, Validators.email],
-      password: ['', Validators.minLength(6)],
+      email: [''],
+      password: [''],
     });
   }
 
