@@ -10,14 +10,15 @@ import {BackendErrorsInterface} from '../../../shared/types/backendErrors.interf
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
   form!: FormGroup;
   isSubmitting$!: Observable<boolean>;
   backendErrors$!: Observable<BackendErrorsInterface | null>;
 
-  constructor(private fb: FormBuilder, private store: Store) {}
+  constructor(private fb: FormBuilder, private store: Store) {
+  }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -25,7 +26,9 @@ export class RegisterComponent implements OnInit {
   }
 
   initializeValues(): void {
+    // @ts-ignore
     this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
+    // @ts-ignore
     this.backendErrors$ = this.store.pipe(select(validationErrorsSelector));
   }
 
@@ -33,12 +36,12 @@ export class RegisterComponent implements OnInit {
     this.form = this.fb.group({
       username: ['', Validators.required],
       email: [''],
-      password: [''],
+      password: ['']
     });
   }
 
   onSubmit(): void {
-    console.log (this.form.value);
+    console.log(this.form.value);
     const request: RegisterRequestInterface = {
       user: this.form.value
     };
