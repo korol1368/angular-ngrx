@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {RegisterRequestInterface} from '../types/registerRequest.interface';
 import {Observable} from 'rxjs';
 import {CurrentUserInterface} from '../../shared/types/currentUser.interface';
@@ -8,11 +8,10 @@ import {map} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   register(data: RegisterRequestInterface): Observable<CurrentUserInterface> {
     const url = `${environment.apiUrl}/users`;
