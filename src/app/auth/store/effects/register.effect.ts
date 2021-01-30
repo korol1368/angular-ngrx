@@ -3,12 +3,13 @@ import {createEffect, Actions, ofType} from '@ngrx/effects';
 import {
   registerAction,
   registerFailureAction,
-  registerSuccessAction
+  registerSuccessAction,
 } from '../actions/register.action';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {CurrentUserInterface} from '../../../shared/types/currentUser.interface';
 import {of} from 'rxjs';
 import {AuthService} from '../../services/auth.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Injectable()
 export class RegisterEffect {
@@ -21,9 +22,9 @@ export class RegisterEffect {
             return registerSuccessAction({currentUser});
           }),
 
-          catchError(() => {
+          catchError((errorResponse: HttpErrorResponse) => {
             return of(
-              registerFailureAction()
+              registerFailureAction({errors: errorResponse.error.errors})
             );
           })
         );
@@ -31,9 +32,5 @@ export class RegisterEffect {
     )
   );
 
-  constructor(
-    private actions$: Actions,
-    private authService: AuthService
-  ) {
-  }
+  constructor(private actions$: Actions, private authService: AuthService) {}
 }
