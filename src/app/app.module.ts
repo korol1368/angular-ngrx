@@ -9,6 +9,7 @@ import {HttpClientModule} from '@angular/common/http';
 
 import {AppComponent} from './app.component';
 import {environment} from 'src/environments/environment';
+import {TopBarModule} from './shared/modules/top-bar/top-bar.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,6 +24,7 @@ import {environment} from 'src/environments/environment';
       maxAge: 25,
       logOnly: environment.production,
     }),
+    TopBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

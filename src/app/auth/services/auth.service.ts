@@ -8,9 +8,7 @@ import {map} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 import {LoginRequestInterface} from '../types/loginRequest.interface';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class AuthService {
   constructor(private http: HttpClient) {}
 

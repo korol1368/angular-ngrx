@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {Observable} from 'rxjs';
 import {BackendErrorsInterface} from '../../../shared/types/backendErrors.interface';
 import {select, Store} from '@ngrx/store';
 import {
@@ -17,8 +16,8 @@ import {loginAction} from '../../store/actions/login.action';
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
-  isSubmitting$!: Observable<boolean>;
-  backendErrors$!: Observable<BackendErrorsInterface | null>;
+  isSubmitting!: boolean;
+  backendErrors!: BackendErrorsInterface | null;
   constructor(private fb: FormBuilder, private store: Store) {}
 
   ngOnInit(): void {
@@ -35,9 +34,13 @@ export class LoginComponent implements OnInit {
 
   initializeValues(): void {
     // @ts-ignore
-    this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
+    this.store.pipe(select(isSubmittingSelector)).subscribe((result) => {
+      this.isSubmitting = result;
+    });
     // @ts-ignore
-    this.backendErrors$ = this.store.pipe(select(validationErrorsSelector));
+    this.store.pipe(select(validationErrorsSelector)).subscribe((result) => {
+      this.backendErrors = result;
+    });
   }
 
   onSubmit(): void {

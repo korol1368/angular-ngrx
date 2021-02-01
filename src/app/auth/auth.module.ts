@@ -4,8 +4,8 @@ import {RouterModule, Routes} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {EffectsModule} from '@ngrx/effects';
 import {StoreModule} from '@ngrx/store';
-import {RegisterEffect} from './store/effects/register.effect';
 
+import {RegisterEffect} from './store/effects/register.effect';
 import {RegisterComponent} from './components/register/register.component';
 import {reducers} from './store/reducers';
 import {AuthService} from './services/auth.service';

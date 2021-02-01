@@ -7,8 +7,8 @@
           <a [routerLink]="['/register']">Need an account?</a>
         </p>
         <app-backend-error-messages
-          *ngIf="backendErrors$ | async"
-          [backendErrors]="backendErrors$ | async"
+          *ngIf="backendErrors"
+          [backendErrors]="backendErrors"
         ></app-backend-error-messages>
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
           <fieldset>
@@ -31,7 +31,7 @@
             <button
               class="btn btn-lg btn-primary pull-xs-right"
               type="submit"
-              [disabled]="isSubmitting$ | async">
+              [disabled]="isSubmitting">
               Sign in
             </button>
           </fieldset>
