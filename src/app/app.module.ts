@@ -12,6 +12,7 @@ import {environment} from 'src/environments/environment';
 import {TopBarModule} from './shared/modules/top-bar/top-bar.module';
 import {PersistanceService} from './shared/services/persistance.service';
 import {AuthInterceptor} from './shared/services/authinterceptor.service';
+import {GlobalFeedModule} from './globalFeed/global-feed.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,6 +28,7 @@ import {AuthInterceptor} from './shared/services/authinterceptor.service';
       logOnly: environment.production,
     }),
     TopBarModule,
+    GlobalFeedModule,
   ],
   providers: [
     PersistanceService,
