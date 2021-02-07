@@ -22,7 +22,7 @@ export class FeedComponent implements OnInit, OnDestroy {
 
   isLoading$!: Observable<boolean>;
   error$!: Observable<string | null>;
-  feed$!: Observable<GetFeedResponseInterface | null>;
+  feed!: GetFeedResponseInterface | null;
   limit = environment.limit;
   baseUrl!: string;
   queryParamsSubscription!: Subscription;
@@ -45,7 +45,7 @@ export class FeedComponent implements OnInit, OnDestroy {
   }
 
   initializeListeners(): void {
-    this.queryParamsSubscription = this.route.params.subscribe(
+    this.queryParamsSubscription = this.route.queryParams.subscribe(
       (params: Params) => {
         this.currentPage = Number(params.page || '1');
       }
@@ -58,7 +58,11 @@ export class FeedComponent implements OnInit, OnDestroy {
     // @ts-ignore
     this.error$ = this.store.pipe(select(errorSelector));
     // @ts-ignore
-    this.feed$ = this.store.pipe(select(feedSelector));
+    this.store.pipe(select(feedSelector)).subscribe((result) => {
+      if (result) {
+        this.feed = result;
+      }
+    });
     this.baseUrl = this.router.url.split('?')[0];
   }
 

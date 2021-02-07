@@ -1,8 +1,8 @@
 <app-loading *ngIf="isLoading$ | async"></app-loading>
 <app-error-message *ngIf="error$ | async"></app-error-message>
 
-<div *ngIf="feed$ | async">
-  <div *ngFor="let article of (feed$ | async)?.articles" class="article-preview">
+<div *ngIf="feed">
+  <div *ngFor="let article of feed.articles" class="article-preview">
     <div class="article-meta">
       <a [routerLink]="['/profiles', article.author.username]">
         <img [src]="article.author.image" alt="">
@@ -23,5 +23,5 @@
       HERE IS LIST OF TAGS
     </a>
   </div>
-<!--  <app-pagination [total]="(feed$ | async).articlesCount" [limit]="limit" [url]="baseUrl" [currentPage]="currentPage"></app-pagination>-->
+  <app-pagination [total]="feed.articlesCount" [limit]="limit" [url]="baseUrl" [currentPage]="currentPage"></app-pagination>
 </div>
