@@ -8,7 +8,15 @@ import {RouterModule} from '@angular/router';
 import {ErrorMessageModule} from '../shared/modules/error-message/error-message.module';
 import {LoadingModule} from '../shared/modules/loading/loading.module';
 import {ArticleService as SharedArticleService} from '../shared/services/article.service';
-import { ArticleComponent } from './components/article/article.component';
+import {ArticleComponent} from './components/article/article.component';
+import {TagListModule} from '../shared/modules/tag-list/tag-list.module';
+
+const routes = [
+  {
+    path: 'articles/:slug',
+    component: ArticleComponent,
+  },
+];
 
 @NgModule({
   declarations: [ArticleComponent],
@@ -16,11 +24,11 @@ import { ArticleComponent } from './components/article/article.component';
     CommonModule,
     EffectsModule.forFeature([GetArticleEffect]),
     StoreModule.forFeature('article', reducers),
-    RouterModule,
+    RouterModule.forChild(routes),
     ErrorMessageModule,
     LoadingModule,
+    TagListModule,
   ],
-  exports: [],
   providers: [SharedArticleService],
 })
 export class ArticleModule {}

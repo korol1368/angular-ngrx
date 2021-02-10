@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {select, Store} from '@ngrx/store';
 import {registerAction} from '../../store/actions/register.action';
@@ -8,22 +8,30 @@ import {
 } from '../../store/selectors';
 import {RegisterRequestInterface} from '../../types/registerRequest.interface';
 import {BackendErrorsInterface} from '../../../shared/types/backendErrors.interface';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   isSubmitting!: boolean;
   backendErrors!: BackendErrorsInterface | null;
+  backendErrorsSubscription!: Subscription;
+  isSubmittingSubscription!: Subscription;
 
   constructor(private fb: FormBuilder, private store: Store) {}
 
   ngOnInit(): void {
     this.initializeForm();
     this.initializeValues();
+  }
+
+  ngOnDestroy(): void {
+    this.backendErrorsSubscription.unsubscribe();
+    this.isSubmittingSubscription.unsubscribe();
   }
 
   initializeValues(): void {
