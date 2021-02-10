@@ -20,7 +20,7 @@
     <a [routerLink]="['/articles', article.slug]">
       <h1>{{article.title}}</h1>
       <p>{{article.description}}</p>
-      HERE IS LIST OF TAGS
+      <app-tag-list [tags]="article.tagList"></app-tag-list>
     </a>
   </div>
   <app-pagination [total]="feed.articlesCount" [limit]="limit" [url]="baseUrl" [currentPage]="currentPage"></app-pagination>
