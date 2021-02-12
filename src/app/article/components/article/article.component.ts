@@ -12,6 +12,7 @@ import {
 import {currentUserSelector} from '../../../auth/store/selectors';
 import {CurrentUserInterface} from '../../../shared/types/currentUser.interface';
 import {map} from 'rxjs/operators';
+import {deleteArticleAction} from '../../store/actions/deleteArticle.action';
 
 @Component({
   selector: 'app-article',
@@ -78,5 +79,9 @@ export class ArticleComponent implements OnInit, OnDestroy {
 
   fetchData(): void {
     this.store.dispatch(getArticleAction({slug: this.slug}));
+  }
+
+  deleteArticle(): void {
+    this.store.dispatch(deleteArticleAction({slug: this.slug}));
   }
 }
