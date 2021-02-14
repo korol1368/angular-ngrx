@@ -1,4 +1,13 @@
 import {Component, OnInit} from '@angular/core';
+import {Observable} from 'rxjs';
+import {BackendErrorsInterface} from '../../../shared/types/backendErrors.interface';
+import {select, Store} from '@ngrx/store';
+import {ArticleInputInterface} from '../../../shared/types/articleInput.interface';
+import {
+  isSubmittingSelector,
+  validationErrorsSelector,
+} from '../../store/selectors';
+import {createArticleAction} from '../../store/actions/createArticle.action';
 
 @Component({
   selector: 'app-create-article',
@@ -6,18 +15,28 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./create-article.component.scss'],
 })
 export class CreateArticleComponent implements OnInit {
-  initialValues = {
-    title: 'Foo',
-    description: 'Bar',
-    body: 'Baz',
-    tagList: ['123'],
+  initialValues: ArticleInputInterface = {
+    title: '',
+    description: '',
+    body: '',
+    tagList: [],
   };
+  isSubmitting$!: Observable<boolean>;
+  backendErrors!: BackendErrorsInterface | null;
+  constructor(private store: Store) {}
 
-  constructor() {}
+  ngOnInit(): void {
+    // @ts-ignore
+    this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
+    // @ts-ignore
+    this.store.pipe(select(validationErrorsSelector)).subscribe((result) => {
+      if (result) {
+        this.backendErrors = result;
+      }
+    });
+  }
 
-  ngOnInit(): void {}
-
-  onSubmit(res: any) {
-    console.log('Submit in parent', res);
+  onSubmit(articleInput: ArticleInputInterface) {
+    this.store.dispatch(createArticleAction({articleInput}));
   }
 }
