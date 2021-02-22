@@ -21,13 +21,17 @@ export class CreateArticleComponent implements OnInit {
     body: '',
     tagList: [],
   };
-  isSubmitting$!: Observable<boolean>;
+  isSubmitting!: boolean;
   backendErrors!: BackendErrorsInterface | null;
   constructor(private store: Store) {}
 
   ngOnInit(): void {
     // @ts-ignore
-    this.isSubmitting$ = this.store.pipe(select(isSubmittingSelector));
+    this.store.pipe(select(isSubmittingSelector)).subscribe((result) => {
+      if (result) {
+        this.isSubmitting = result;
+      }
+    });
     // @ts-ignore
     this.store.pipe(select(validationErrorsSelector)).subscribe((result) => {
       if (result) {
