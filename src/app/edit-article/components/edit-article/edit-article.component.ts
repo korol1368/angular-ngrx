@@ -46,6 +46,7 @@ export class EditArticleComponent implements OnInit {
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
     // @ts-ignore
     this.backendErrors$ = this.store.pipe(select(validationErrorsSelector));
+    // @ts-ignore
     this.initialValues$ = this.store.pipe(
       // @ts-ignore
       select(articleSelector),
