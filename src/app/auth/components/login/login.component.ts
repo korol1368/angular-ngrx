@@ -42,14 +42,18 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   initializeValues(): void {
-    // @ts-ignore
-    this.store.pipe(select(isSubmittingSelector)).subscribe((result) => {
-      this.isSubmitting = result;
-    });
-    // @ts-ignore
-    this.store.pipe(select(validationErrorsSelector)).subscribe((result) => {
-      this.backendErrors = result;
-    });
+    this.isSubmittingSubscription = this.store
+      // @ts-ignore
+      .pipe(select(isSubmittingSelector))
+      .subscribe((result) => {
+        this.isSubmitting = result;
+      });
+    this.backendErrorsSubscription = this.store
+      // @ts-ignore
+      .pipe(select(validationErrorsSelector))
+      .subscribe((result) => {
+        this.backendErrors = result;
+      });
   }
 
   onSubmit(): void {

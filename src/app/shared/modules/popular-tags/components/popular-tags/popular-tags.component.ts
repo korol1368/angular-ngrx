@@ -8,7 +8,6 @@ import {
   isLoadingSelector,
   popularTagsSelector,
 } from '../../store/selectors';
-import {AppStateInterface} from '../../../../types/appState.interface';
 
 @Component({
   selector: 'app-popular-tags',
