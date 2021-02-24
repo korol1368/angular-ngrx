@@ -28,11 +28,11 @@ export class EditArticleComponent implements OnInit {
   constructor(private store: Store, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.initialazeValues();
+    this.initializeValues();
     this.fetchData();
   }
 
-  initialazeValues(): void {
+  initializeValues(): void {
     this.slug = this.route.snapshot.paramMap.get('slug');
     // @ts-ignore
     this.store.pipe(select(isSubmittingSelector)).subscribe((result) => {
