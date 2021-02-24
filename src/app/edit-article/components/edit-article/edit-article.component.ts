@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Observable, Subscription} from 'rxjs';
 import {Store, select} from '@ngrx/store';
 import {
   isSubmittingSelector,
@@ -18,9 +18,11 @@ import {BackendErrorsInterface} from '../../../shared/types/backendErrors.interf
   templateUrl: './edit-article.component.html',
   styleUrls: ['./edit-article.component.scss'],
 })
-export class EditArticleComponent implements OnInit {
+export class EditArticleComponent implements OnInit, OnDestroy {
   initialValues!: ArticleInputInterface;
+  initialValuesSubscription!: Subscription;
   isSubmitting!: boolean;
+  isSubmittingSubscription!: Subscription;
   isLoading$!: Observable<boolean>;
   backendErrors$!: Observable<BackendErrorsInterface | null>;
   slug!: string | null;
@@ -32,29 +34,38 @@ export class EditArticleComponent implements OnInit {
     this.fetchData();
   }
 
+  ngOnDestroy(): void {
+    this.isSubmittingSubscription.unsubscribe();
+    this.initialValuesSubscription.unsubscribe();
+  }
+
   initializeValues(): void {
     this.slug = this.route.snapshot.paramMap.get('slug');
-    // @ts-ignore
-    this.store.pipe(select(isSubmittingSelector)).subscribe((result) => {
-      if (result) {
-        this.isSubmitting = result;
-      }
-    });
+    this.isSubmittingSubscription = this.store
+      // @ts-ignore
+      .pipe(select(isSubmittingSelector))
+      .subscribe((result) => {
+        if (result) {
+          this.isSubmitting = result;
+        }
+      });
     // @ts-ignore
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
     // @ts-ignore
     this.backendErrors$ = this.store.pipe(select(validationErrorsSelector));
-    // @ts-ignore
-    this.store.pipe(select(articleSelector)).subscribe((result) => {
-      if (result) {
-        this.initialValues = {
-          title: result.title,
-          description: result.description,
-          body: result.body,
-          tagList: result.tagList,
-        };
-      }
-    });
+    this.initialValuesSubscription = this.store
+      // @ts-ignore
+      .pipe(select(articleSelector))
+      .subscribe((result) => {
+        if (result) {
+          this.initialValues = {
+            title: result.title,
+            description: result.description,
+            body: result.body,
+            tagList: result.tagList,
+          };
+        }
+      });
   }
 
   fetchData(): void {

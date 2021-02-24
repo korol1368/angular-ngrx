@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Observable, Subscription} from 'rxjs';
 import {BackendErrorsInterface} from '../../../shared/types/backendErrors.interface';
 import {select, Store} from '@ngrx/store';
 import {ArticleInputInterface} from '../../../shared/types/articleInput.interface';
@@ -14,7 +14,7 @@ import {createArticleAction} from '../../store/actions/createArticle.action';
   templateUrl: './create-article.component.html',
   styleUrls: ['./create-article.component.scss'],
 })
-export class CreateArticleComponent implements OnInit {
+export class CreateArticleComponent implements OnInit, OnDestroy {
   initialValues: ArticleInputInterface = {
     title: '',
     description: '',
@@ -23,21 +23,32 @@ export class CreateArticleComponent implements OnInit {
   };
   isSubmitting!: boolean;
   backendErrors!: BackendErrorsInterface | null;
+  backendErrorsSubscription!: Subscription;
+  isSubmittingSubscription!: Subscription;
   constructor(private store: Store) {}
 
   ngOnInit(): void {
-    // @ts-ignore
-    this.store.pipe(select(isSubmittingSelector)).subscribe((result) => {
-      if (result) {
-        this.isSubmitting = result;
-      }
-    });
-    // @ts-ignore
-    this.store.pipe(select(validationErrorsSelector)).subscribe((result) => {
-      if (result) {
-        this.backendErrors = result;
-      }
-    });
+    this.isSubmittingSubscription = this.store
+      // @ts-ignore
+      .pipe(select(isSubmittingSelector))
+      .subscribe((result) => {
+        if (result) {
+          this.isSubmitting = result;
+        }
+      });
+    this.backendErrorsSubscription = this.store
+      // @ts-ignore
+      .pipe(select(validationErrorsSelector))
+      .subscribe((result) => {
+        if (result) {
+          this.backendErrors = result;
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.backendErrorsSubscription.unsubscribe();
+    this.isSubmittingSubscription.unsubscribe();
   }
 
   onSubmit(articleInput: ArticleInputInterface) {

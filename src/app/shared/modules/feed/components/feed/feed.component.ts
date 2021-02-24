@@ -31,6 +31,7 @@ export class FeedComponent implements OnInit, OnDestroy, OnChanges {
   isLoading$!: Observable<boolean>;
   error$!: Observable<string | null>;
   feed!: GetFeedResponseInterface | null;
+  feedSubscription!: Subscription;
   limit = environment.limit;
   baseUrl!: string;
   queryParamsSubscription!: Subscription;
@@ -58,6 +59,7 @@ export class FeedComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnDestroy(): void {
     this.queryParamsSubscription.unsubscribe();
+    this.feedSubscription.unsubscribe();
   }
 
   initializeListeners(): void {
@@ -74,12 +76,14 @@ export class FeedComponent implements OnInit, OnDestroy, OnChanges {
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
     // @ts-ignore
     this.error$ = this.store.pipe(select(errorSelector));
-    // @ts-ignore
-    this.store.pipe(select(feedSelector)).subscribe((result) => {
-      if (result) {
-        this.feed = result;
-      }
-    });
+    this.feedSubscription = this.store
+      // @ts-ignore
+      .pipe(select(feedSelector))
+      .subscribe((result) => {
+        if (result) {
+          this.feed = result;
+        }
+      });
     this.baseUrl = this.router.url.split('?')[0];
   }
 
