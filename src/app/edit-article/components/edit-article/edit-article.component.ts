@@ -9,8 +9,6 @@ import {
 } from '../../store/selectors';
 import {getArticleAction} from '../../store/actions/getArticle.action';
 import {ActivatedRoute} from '@angular/router';
-import {filter, map} from 'rxjs/operators';
-import {ArticleInterface} from 'src/app/shared/types/article.interface';
 import {updateArticleAction} from '../../store/actions/updateArticle.action';
 import {ArticleInputInterface} from '../../../shared/types/articleInput.interface';
 import {BackendErrorsInterface} from '../../../shared/types/backendErrors.interface';
@@ -21,7 +19,7 @@ import {BackendErrorsInterface} from '../../../shared/types/backendErrors.interf
   styleUrls: ['./edit-article.component.scss'],
 })
 export class EditArticleComponent implements OnInit {
-  initialValues$!: Observable<ArticleInputInterface>;
+  initialValues!: ArticleInputInterface;
   isSubmitting!: boolean;
   isLoading$!: Observable<boolean>;
   backendErrors$!: Observable<BackendErrorsInterface | null>;
@@ -30,11 +28,11 @@ export class EditArticleComponent implements OnInit {
   constructor(private store: Store, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.initialValues();
+    this.initializeValues();
     this.fetchData();
   }
 
-  initialValues(): void {
+  initializeValues(): void {
     this.slug = this.route.snapshot.paramMap.get('slug');
     // @ts-ignore
     this.store.pipe(select(isSubmittingSelector)).subscribe((result) => {
@@ -46,19 +44,17 @@ export class EditArticleComponent implements OnInit {
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
     // @ts-ignore
     this.backendErrors$ = this.store.pipe(select(validationErrorsSelector));
-    this.initialValues$ = this.store.pipe(
-      // @ts-ignore
-      select(articleSelector),
-      filter(Boolean),
-      map((article: ArticleInterface) => {
-        return {
-          title: article.title,
-          description: article.description,
-          body: article.body,
-          tagList: article.tagList,
+    // @ts-ignore
+    this.store.pipe(select(articleSelector)).subscribe((result) => {
+      if (result) {
+        this.initialValues = {
+          title: result.title,
+          description: result.description,
+          body: result.body,
+          tagList: result.tagList,
         };
-      })
-    );
+      }
+    });
   }
 
   fetchData(): void {

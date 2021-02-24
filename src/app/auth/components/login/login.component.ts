@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   backendErrors!: BackendErrorsInterface | null;
   backendErrorsSubscription!: Subscription;
   isSubmittingSubscription!: Subscription;
+
   constructor(private fb: FormBuilder, private store: Store) {}
 
   ngOnInit(): void {
